@@ -1,6 +1,15 @@
 import React from "react";
 import SwiperCore, { EffectCoverflow, Pagination, Mousewheel, Autoplay, FreeMode } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
+import property1 from '../../assets/images/property1.jpg'
+import property2 from '../../assets/images/property2.jpg'
+import property3 from '../../assets/images/property3.jpg'
+import property4 from '../../assets/images/property4.jpg'
+import property5 from '../../assets/images/property5.jpg'
+import property6 from '../../assets/images/property6.jpg'
+import property7 from '../../assets/images/property7.jpg'
+import property8 from '../../assets/images/property8.jpg'
+import property9 from '../../assets/images/property9.jpg'
 import "swiper/css/free-mode";
 import "swiper/swiper-bundle.min.css";
 import "swiper/swiper.min.css";
@@ -8,14 +17,73 @@ import { propertyData } from "./PropertyData";
 import './propertyList.scss'
 import { Navigation} from "swiper";
 import "swiper/css/navigation";
+import useFetch from "../../hooks/useFetch";
 SwiperCore.use([EffectCoverflow, Pagination ]);
 
+
 const PropertyList = () => {
+
+   const { data, loading, error } = useFetch(
+    "http://localhost:5000/api/hotels/countByCity?cities=coxbazar,dhaka,sylhet,chittagong,khulna,sreemangal,bandarban,rajshahi,rangamati"
+  );
+
+  const propertyData =[
+    {
+    propertyImg: property1,
+    title:"Cox's Bazar",
+    pra:data[0]
+},
+    {
+    propertyImg: property2,
+        title:"Dhaka",
+    pra:data[1]
+},
+    {
+    propertyImg: property3,
+    title:"Sylhet",
+    pra:data[2]
+},
+    {
+    propertyImg: property4,
+    title:"Chittagong",
+    pra:data[3]
+},
+    {
+    propertyImg: property5,
+        title:"Khulna",
+    pra:data[4]
+},
+    {
+    propertyImg: property6,
+        title:"Sreemangal",
+    pra:data[5]
+},
+    {
+    propertyImg: property7,
+        title:"Bandarban",
+    pra:data[6]
+},
+    {
+    propertyImg: property8,
+        title:"Rajshahi",
+    pra:data[7]
+},
+    {
+    propertyImg: property9,
+        title:"Rangamati",
+    pra:data[8]
+},
+
+]
+
+  console.log(data.map(i=> console.log(i)));
+
+
   return (
 <div className="pList">
       <div className="container">
        <div className="common-title-border">
-          <h1 className="commonTitle fw-bold">Browse by property type</h1>
+          <h1 className="commonTitle fw-bold">Browse by property count</h1>
           <h2 className="title-hints">Explore Bangladesh</h2>
        </div>
         <div className="pListWrapper">
@@ -37,13 +105,13 @@ const PropertyList = () => {
             modules={[Navigation, Pagination, Mousewheel, Autoplay, FreeMode]}
             className="propertyListSwiper" >
             {
-              propertyData.map((data)=>{
+              propertyData.map((property)=>{
              return(
                <SwiperSlide>
                  <div className="propertySlider">
-                   <img src={data.propertyImg} className="img-fluid" alt="" />
-                   <h3 className="propertyTitle mt-3">{data.title}</h3>
-                   <p className="propertyPra mt-2">{data.pra}</p>
+                   <img src={property.propertyImg} className="img-fluid" alt="" />
+                   <h3 className="propertyTitle mt-3">{property.title}</h3>
+                   <p className="propertyPra mt-2">{property.pra} Properties</p>
                  </div>
                </SwiperSlide>
              )
