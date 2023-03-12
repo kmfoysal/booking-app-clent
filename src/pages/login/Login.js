@@ -34,6 +34,10 @@ const Login = () => {
            if (res?.data?.details?.email) {
                navigate("/");
            }
+
+           if (res?.data?.details?.isAdmin) {
+             navigate("/admin/dashboard");
+           }
        } catch (err) {
            dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
        }

@@ -24,7 +24,7 @@ const Navbar = () => {
                           <Link to="/registration" className="navButton text-decoration-none">
                               Register
                           </Link>
-                          <Link to="/signup" className="navButton text-decoration-none">
+                          <Link to="/signin" className="navButton text-decoration-none">
                               Login
                           </Link>
                       </>
