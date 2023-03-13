@@ -96,7 +96,7 @@ const HotelModal = ({data}) => {
                     htmlFor="file"
                     className="d-flex flex-column justify-content-center align-items-center"
                   >
-                    Upload Your Profile image
+                    Upload Hotel images
                     <input
                       type="file"
                       name="profilePic"
@@ -110,27 +110,61 @@ const HotelModal = ({data}) => {
             </div>
             <Row>
               <Col>
-                <FloatingLabel controlId="name" label="Name" className="mb-3">
+                <FloatingLabel
+                  controlId="name"
+                  label="Hotel Name"
+                  className="mb-3"
+                >
                   <Form.Control
                     type="text"
                     name="name"
-                    placeholder="Enter Your Name ... "
+                    placeholder="Enter hotel Name ... "
                     value={editData?.name}
                     onChange={handleUpdateChange}
                   />
                 </FloatingLabel>
               </Col>
               <Col>
+                <FloatingLabel controlId="type" label="Type">
+                  <Form.Select
+                    aria-label="type"
+                    name="type"
+                    value={editData?.type}
+                    onChange={handleUpdateChange}
+                  >
+                    <option>Select hotel type</option>
+                    <option value="hotel">Hotel</option>
+                    <option value="Apartment">Apartment</option>
+                    <option value="resort">Resort</option>
+                    <option value="villa">Villa</option>
+                    <option value="guest house">Guest House</option>
+                  </Form.Select>
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FloatingLabel controlId="city" label="City" className="mb-3">
+                  <Form.Control
+                    type="text"
+                    name="city"
+                    placeholder="Enter city Name ... "
+                    value={editData?.city}
+                    onChange={handleUpdateChange}
+                  />
+                </FloatingLabel>
+              </Col>
+              <Col>
                 <FloatingLabel
-                  controlId="userName"
-                  label="User Name"
+                  controlId="address"
+                  label="Address"
                   className="mb-3"
                 >
                   <Form.Control
                     type="text"
-                    name="username"
-                    placeholder="Enter Your user name ... "
-                    value={editData?.username}
+                    name="address"
+                    placeholder="Enter  Address ... "
+                    value={editData?.address}
                     onChange={handleUpdateChange}
                   />
                 </FloatingLabel>
@@ -138,49 +172,90 @@ const HotelModal = ({data}) => {
             </Row>
             <Row>
               <Col>
-                <FloatingLabel controlId="email" label="Email" className="mb-3">
+                <FloatingLabel controlId="title" label="title" className="mb-3">
                   <Form.Control
-                    type="email"
-                    name="email"
-                    placeholder="Enter Your Name ... "
-                    value={editData?.email}
+                    type="text"
+                    name="title"
+                    placeholder="Enter title ... "
+                    value={editData?.title}
+                    onChange={handleUpdateChange}
+                  />
+                </FloatingLabel>
+              </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="distance"
+                  label="Distance from center"
+                  className="mb-3"
+                >
+                  <Form.Control
+                    type="text"
+                    name="distance"
+                    placeholder="Enter distance ... "
+                    value={editData?.distance}
                     onChange={handleUpdateChange}
                   />
                 </FloatingLabel>
               </Col>
             </Row>
-
-            <FloatingLabel controlId="address" label="Address" className="mb-3">
+            <FloatingLabel
+              controlId="desc"
+              label="Description"
+              className="mb-3"
+            >
               <Form.Control
-                type="text"
-                name="address"
-                placeholder="Enter Your Address ... "
-                value={editData?.address}
+                type="text-area"
+                name="distance"
+                placeholder="Enter Description ... "
+                height={300}
+                value={editData?.desc}
                 onChange={handleUpdateChange}
               />
             </FloatingLabel>
             <Row>
               <Col>
-                <FloatingLabel controlId="phone" label="Phone" className="mb-3">
+                <FloatingLabel controlId="rating" label="Rating">
+                  <Form.Select
+                    aria-label="Rating"
+                    name="rating"
+                    value={editData.rating}
+                    onChange={handleUpdateChange}
+                  >
+                    <option>Select Rating</option>
+                    <option value={5}>5 Star</option>
+                    <option value={4}>4 Star</option>
+                    <option value={3}>3 Star</option>
+                    <option value={2}>2 Star</option>
+                    <option value={1}>1 Star</option>
+                  </Form.Select>
+                </FloatingLabel>
+              </Col>
+              <Col>
+                <FloatingLabel
+                  controlId="cheapestPrice"
+                  label="Cheapest Price"
+                  className="mb-3"
+                >
                   <Form.Control
-                    type="phone"
-                    name="phone"
-                    placeholder="Enter Your phone number ... "
-                    value={editData?.phone}
+                    type="number"
+                    name="cheapestPrice"
+                    placeholder="Enter Description ... "
+                    height={300}
+                    value={editData?.cheapestPrice}
                     onChange={handleUpdateChange}
                   />
                 </FloatingLabel>
               </Col>
               <Col>
-                <FloatingLabel controlId="userRole" label="User Role">
+                <FloatingLabel controlId="featured" label="Featured hotel">
                   <Form.Select
                     aria-label="User Role"
-                    name="userRole"
+                    name="featured"
                     onChange={handleUpdateChange}
                   >
-                    <option>Select a User Role</option>
-                    <option value={true}>Admin</option>
-                    <option value={false}>User</option>
+                    <option>Is it Featured hotel ?</option>
+                    <option value={true}>Yes</option>
+                    <option value={false}>No</option>
                   </Form.Select>
                 </FloatingLabel>
               </Col>
