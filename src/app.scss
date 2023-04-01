@@ -67,3 +67,11 @@
   letter-spacing: 0.01em;
   color: #a6acbe;
 }
+
+.btn{
+  &:disabled{
+    cursor: not-allowed;
+    background-color: #ddd;
+    border: none;
+  }
+}

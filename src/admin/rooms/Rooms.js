@@ -3,7 +3,6 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import useFetch from '../../hooks/useFetch';
 import RoomModal from './RoomModal';
-import UserAvator from "../../assets/images/parson5.png";
 
 const DeleteBtn = ({ data, loading }) => {
   const handleDelete = async () => {
@@ -31,7 +30,7 @@ const DeleteBtn = ({ data, loading }) => {
 
 const Rooms = () => {
 
-      const { data, loading, error } = useFetch(
+      const { data, loading, reFetch, error } = useFetch(
         "http://localhost:5000/api/rooms"
     );
     
@@ -39,6 +38,7 @@ const Rooms = () => {
       <div>
         <div className="d-flex justify-content-between align-items-center mb-2">
           <h4>Rooms Table</h4>
+          <RoomModal btnName='Add Room' addRoom={true} />
         </div>
         <Table striped bordered hover>
           <thead>
@@ -63,7 +63,7 @@ const Rooms = () => {
                   <td>{room?.maxPeople} person</td>
                   <td>{room?.roomNumbers.length}</td>
                   <td>
-                    <RoomModal data={room} />
+                    <RoomModal btnName="Edit" data={room} />
                     <DeleteBtn data={room} loading={loading} />
                   </td>
                 </tr>

@@ -2,96 +2,162 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
 
-const HotelModal = ({data}) => {
+const HotelModal = ({ data, loading, reFetch, btnName, addHotel }) => {
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  // For update User State
+  // For update Hotel State
   const [editData, setEditData] = useState(data);
 
-  const [file, setFile] = useState("");
+  // For Create Hotel State
+  const [info, setInfo] = useState({})
 
-  const handleUpdate = async (e) => {
+  const [files, setFiles] = useState("");
+
+
+
+  const handleCreate = async (e) => {
+
     e.preventDefault();
 
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "upload");
+     const imageList = await Promise.all(
+       Object.values(files).map(async (file) => {
+         const data = new FormData();
+         data.append("file", file);
+         data.append("upload_preset", "upload");
+         const uploadRes = await axios.post(
+           "https://api.cloudinary.com/v1_1/kmfoysal/image/upload",
+           data
+         );
 
-    const uploadRes = await axios.post(
-      "https://api.cloudinary.com/v1_1/kmfoysal/image/upload",
-      data
-    );
+         const { url } = uploadRes.data;
+         return url;
+       })
+     );
 
-    const { url } = uploadRes.data;
+    const hotelInfo = {
 
-    const updateCurrentUser = {
-      name: editData?.name,
-      username: editData?.username,
-      email: editData?.email,
-      password: editData?.password,
-      address: editData?.address,
-      phone: editData?.phone,
-      profilePic: url,
-      isAdmin: editData?.isAdmin,
+      ...info,
+      photos: imageList,
     };
 
     try {
-      await axios.put(
-        `http://localhost:5000/api/users/${editData?._id}`,
-        updateCurrentUser
+      await axios.post(
+        `http://localhost:5000/api/hotels/`,
+        hotelInfo
       );
 
       handleClose();
-      window.location.reload();
+      reFetch();
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleUpdateChange = (e) => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+
+
+    // const imageList = await Promise.all(
+    //   Object.values(files).map(async (file) => {
+    //     const data = new FormData();
+    //     data.append("file", file);
+    //     data.append("upload_preset", "upload");
+    //     const uploadRes = await axios.post(
+    //       "https://api.cloudinary.com/v1_1/kmfoysal/image/upload",
+    //       data
+    //     );
+
+    //     const { url } = uploadRes.data;
+    //     return url;
+    //   })
+    // );
+
+    // const data = new FormData();
+    // data.append("file", file);
+    // data.append("upload_preset", "upload");
+
+    // const uploadRes = await axios.post(
+    //   "https://api.cloudinary.com/v1_1/kmfoysal/image/upload",
+    //   data
+    // );
+
+    // const { url } = uploadRes.data;
+
+    const updateHotel = {
+      name: editData?.name,
+      title: editData?.title,
+      type: editData?.type,
+      city: editData?.city,
+      address: editData?.address,
+      rating: editData?.rating,
+      cheapestPrice: editData?.cheapestPrice,
+      featured: editData?.featured,
+      desc: editData?.desc,
+      distance: editData?.distance,
+    };
+
+    try {
+      await axios.put(
+        `http://localhost:5000/api/hotels/${editData?._id}`,
+        updateHotel
+      );
+
+      handleClose();
+      reFetch()
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleChange = (e) => {
     const type = e.target.type;
 
     const name = e.target.name;
 
     const value = type === "file" ? e.target.files[0] : e.target.value;
 
-    setEditData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    if (addHotel) {
+      setInfo((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    } else {
+       setEditData((prevData) => ({
+         ...prevData,
+         [name]: value,
+       }));
+    }
   };
 
-    
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        Edit
+      <Button variant={addHotel ? "primary" : "warning"} onClick={handleShow}>
+        {btnName}
       </Button>
 
       <Modal centered size="lg" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit User</Modal.Title>
+          <Modal.Title>{addHotel ? "Create Hotel" : "Edit"} Hotel</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={handleUpdate}>
-            <div>
+          <form onSubmit={addHotel ? handleCreate : handleUpdate}>
+            { addHotel && <div>
               <div className="formInput text-center mb-4">
                 <img
-                  className="rounded-circle"
+                  className=""
                   src={
-                    file
-                      ? URL.createObjectURL(file)
-                      : data?.profilePic
-                      ? data?.profilePic
-                      : "https://images.vexels.com/media/users/3/147102/isolated/lists/082213cb0f9eabb7e6715f59ef7d322a-instagram-profile-icon.png"
+                    files
+                      ? URL.createObjectURL(files[0])
+                      : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScRhHucTJYJnlCrX8kZX2H6n_S6ictGlu3UQ&usqp=CAU"
                   }
                   alt="img"
                   width={100}
                 />
-                {!file && (
+                {!files && (
                   <label
                     htmlFor="file"
                     className="d-flex flex-column justify-content-center align-items-center"
@@ -99,15 +165,16 @@ const HotelModal = ({data}) => {
                     Upload Hotel images
                     <input
                       type="file"
-                      name="profilePic"
-                      onChange={(e) => setFile(e.target.files[0])}
-                      placeholder="Upload profile picture"
-                      style={{ width: "100px" }}
+                      multiple
+                      name="photos"
+                      onChange={(e) => setFiles(e.target.files)}
+                      placeholder="Upload Hotel Images"
+                      style={{ width: "110px" }}
                     />
                   </label>
                 )}
               </div>
-            </div>
+            </div>}
             <Row>
               <Col>
                 <FloatingLabel
@@ -119,8 +186,8 @@ const HotelModal = ({data}) => {
                     type="text"
                     name="name"
                     placeholder="Enter hotel Name ... "
-                    value={editData?.name}
-                    onChange={handleUpdateChange}
+                    value={addHotel ? info?.name : editData?.name}
+                    onChange={handleChange}
                   />
                 </FloatingLabel>
               </Col>
@@ -129,8 +196,8 @@ const HotelModal = ({data}) => {
                   <Form.Select
                     aria-label="type"
                     name="type"
-                    value={editData?.type}
-                    onChange={handleUpdateChange}
+                    value={addHotel ? info?.type : editData?.type}
+                    onChange={handleChange}
                   >
                     <option>Select hotel type</option>
                     <option value="hotel">Hotel</option>
@@ -149,8 +216,8 @@ const HotelModal = ({data}) => {
                     type="text"
                     name="city"
                     placeholder="Enter city Name ... "
-                    value={editData?.city}
-                    onChange={handleUpdateChange}
+                    value={addHotel ? info?.city : editData?.city}
+                    onChange={handleChange}
                   />
                 </FloatingLabel>
               </Col>
@@ -164,8 +231,8 @@ const HotelModal = ({data}) => {
                     type="text"
                     name="address"
                     placeholder="Enter  Address ... "
-                    value={editData?.address}
-                    onChange={handleUpdateChange}
+                    value={addHotel ? info?.address : editData?.address}
+                    onChange={handleChange}
                   />
                 </FloatingLabel>
               </Col>
@@ -177,8 +244,8 @@ const HotelModal = ({data}) => {
                     type="text"
                     name="title"
                     placeholder="Enter title ... "
-                    value={editData?.title}
-                    onChange={handleUpdateChange}
+                    value={addHotel ? info?.title : editData?.title}
+                    onChange={handleChange}
                   />
                 </FloatingLabel>
               </Col>
@@ -192,8 +259,8 @@ const HotelModal = ({data}) => {
                     type="text"
                     name="distance"
                     placeholder="Enter distance ... "
-                    value={editData?.distance}
-                    onChange={handleUpdateChange}
+                    value={addHotel ? info?.distance : editData?.distance}
+                    onChange={handleChange}
                   />
                 </FloatingLabel>
               </Col>
@@ -205,11 +272,11 @@ const HotelModal = ({data}) => {
             >
               <Form.Control
                 type="text-area"
-                name="distance"
+                name="desc"
                 placeholder="Enter Description ... "
                 height={300}
-                value={editData?.desc}
-                onChange={handleUpdateChange}
+                value={addHotel ? info?.desc : editData?.desc}
+                onChange={handleChange}
               />
             </FloatingLabel>
             <Row>
@@ -218,8 +285,8 @@ const HotelModal = ({data}) => {
                   <Form.Select
                     aria-label="Rating"
                     name="rating"
-                    value={editData.rating}
-                    onChange={handleUpdateChange}
+                    value={addHotel ? info?.rating : editData?.rating}
+                    onChange={handleChange}
                   >
                     <option>Select Rating</option>
                     <option value={5}>5 Star</option>
@@ -241,17 +308,19 @@ const HotelModal = ({data}) => {
                     name="cheapestPrice"
                     placeholder="Enter Description ... "
                     height={300}
-                    value={editData?.cheapestPrice}
-                    onChange={handleUpdateChange}
+                    value={
+                      addHotel ? info?.cheapestPrice : editData?.cheapestPrice
+                    }
+                    onChange={handleChange}
                   />
                 </FloatingLabel>
               </Col>
               <Col>
                 <FloatingLabel controlId="featured" label="Featured hotel">
                   <Form.Select
-                    aria-label="User Role"
                     name="featured"
-                    onChange={handleUpdateChange}
+                    onChange={handleChange}
+                    value={addHotel ? info?.featured : editData?.featured}
                   >
                     <option>Is it Featured hotel ?</option>
                     <option value={true}>Yes</option>
@@ -262,7 +331,7 @@ const HotelModal = ({data}) => {
             </Row>
 
             <button type="submit" className="headerBtn banner-btn mt-3 w-100">
-              UPDATE
+              {addHotel ? "Create" : "UPDATE"}
             </button>
           </form>
         </Modal.Body>

@@ -33,11 +33,11 @@ const DashboardHeader = ({ menuOpen, setMenuOpen }) => {
         </div>
       </div>
       <div className="right-item">
-        <div>
+        {/* <div>
           <button className="upload-btn">
             Upload <img src={UploadIcon} alt={UploadIcon} />
           </button>
-        </div>
+        </div> */}
         <div className="notification-box">
           <button className="notify-btn">
             <img src={MessageIcon} alt={MessageIcon} />

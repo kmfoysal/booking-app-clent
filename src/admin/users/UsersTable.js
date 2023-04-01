@@ -6,6 +6,7 @@ import useFetch from "../../hooks/useFetch";
 import UserModal from "./UserModal";
 
 const DeleteBtn = ({ data, loading }) => {
+  
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:5000/api/users/${data?._id}`);
