@@ -33,6 +33,9 @@ const Navbar = () => {
                   {user?.email && (
                       <>
                           <Link className="text-success text-decoration-none fw-bold">{user?.name}</Link>
+                          {user?.email && user?.isAdmin &&  <Link to="/admin/dashboard" className="navButton text-decoration-none">
+                              Admin Dashboard
+                          </Link>}
                           <Link className="navButton text-decoration-none" onClick={handleLogout}>
                               Logout
                           </Link>

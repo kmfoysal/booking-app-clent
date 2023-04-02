@@ -1,11 +1,15 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Button, Col, FloatingLabel, Form, Modal, Row } from 'react-bootstrap';
+import useFetch from '../../hooks/useFetch';
 
 
 const RoomModal = ({ data, btnName, addRoom, reFetch }) => {
 
-    console.log(data);
+  const { data: hotelData, loading, error } = useFetch(
+    "http://localhost:5000/api/hotels"
+  );
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -16,9 +20,8 @@ const RoomModal = ({ data, btnName, addRoom, reFetch }) => {
   const [hotelId, setHotelId] = useState(undefined);
   const [rooms, setRooms] = useState([]);
 
-//   const { data, loading, error, reFetch } = useFetch(
-//     "http://localhost:5000/api/rooms"
-//   );
+
+
 
   // For update Hotel State
   const [editData, setEditData] = useState(data);
@@ -67,16 +70,11 @@ const RoomModal = ({ data, btnName, addRoom, reFetch }) => {
     e.preventDefault();
 
     const updateRoom = {
-      name: editData?.name,
       title: editData?.title,
-      type: editData?.type,
-      city: editData?.city,
-      address: editData?.address,
-      rating: editData?.rating,
-      cheapestPrice: editData?.cheapestPrice,
-      featured: editData?.featured,
+      maxPeople: editData?.maxPeople,
+      price: editData?.price,
       desc: editData?.desc,
-      distance: editData?.distance,
+      roomNumbers: editData?.roomNumbers,
     };
 
     try {
@@ -107,13 +105,13 @@ const RoomModal = ({ data, btnName, addRoom, reFetch }) => {
             <Row>
               <Col>
                 <FloatingLabel
-                  controlId="name"
+                  controlId="title"
                   label="Room Name"
                   className="mb-3"
                 >
                   <Form.Control
                     type="text"
-                    name="name"
+                    name="title"
                     placeholder="Enter hotel Name ... "
                     value={addRoom ? info?.title : editData?.title}
                     onChange={handleChange}
@@ -163,21 +161,52 @@ const RoomModal = ({ data, btnName, addRoom, reFetch }) => {
                 onChange={handleChange}
               />
             </FloatingLabel>
-            {/* <Row>
+            <FloatingLabel
+              controlId="roomNumbers"
+              label="Room Numbers (Give comma between room numbers)"
+              className="mb-3"
+            >
+              <Form.Control
+                type="text-area"
+                name="roomNumbers"
+                placeholder="Give comma between room numbers... "
+                height={300}
+                value={
+                  addRoom
+                    ? info?.roomNumbers
+                    : editData?.roomNumbers?.map((room) => room?.number)
+                }
+                onChange={
+                  addRoom ? (e) => setRooms(e.target.value) : handleChange
+                }
+              />
+            </FloatingLabel>
+            <Row>
               <Col>
-                <FloatingLabel controlId="featured" label="Featured hotel">
+                <FloatingLabel controlId="hotelId" label="Select Hotel">
                   <Form.Select
-                    name="featured"
-                    onChange={handleChange}
-                    value={addRoom ? info?.featured : editData?.featured}
+                    name="hotelId"
+                    onChange={
+                      addRoom ? (e) => setHotelId(e.target.value) : handleChange
+                    }
+                    // value={addRoom ? hotelData &&
+                    //     hotelData?.map(hotel => hotel.name) : editData?.featured}
                   >
-                    <option>Is it Featured hotel ?</option>
-                    <option value={true}>Yes</option>
-                    <option value={false}>No</option>
+                    {loading
+                      ? "loading"
+                      : hotelData &&
+                        hotelData?.map((hotel) => (
+                          <option
+                            key={hotel._id}
+                            value={hotel._id}
+                          >
+                            {hotel.name}
+                          </option>
+                        ))}
                   </Form.Select>
                 </FloatingLabel>
               </Col>
-            </Row> */}
+            </Row>
 
             <button type="submit" className="headerBtn banner-btn mt-3 w-100">
               {addRoom ? "Create" : "UPDATE"}

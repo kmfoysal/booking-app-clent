@@ -44,6 +44,9 @@ const SideBar = ({ menuOpen, setMenuOpen }) => {
           <Link to="/admin/dashboard/rooms" className="main-menu-link">
             Rooms
           </Link>
+          <Link to="/" className="main-menu-link mt-5">
+            Go To User Page
+          </Link>
         </div>
       </div>
       <div className="bottom-link">
