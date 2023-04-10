@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/AuthContext';
 import useFetch from '../../hooks/useFetch';
 import useSearch from '../../hooks/useSearch';
-import './bookingModal.scss'
+import './bookingModal.scss';
 
 const BookingModal = ({ data, totalCost, totalDays }) => {
 
@@ -120,86 +120,83 @@ const BookingModal = ({ data, totalCost, totalDays }) => {
   };
 
   return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        Reserve or Book Now!
-      </Button>
+      <>
+          <Button variant="primary" onClick={handleShow}>
+              Reserve or Book Now!
+          </Button>
 
-      <Modal show={show} onHide={handleClose} size="xl" centered>
-        <Modal.Body>
-          <form>
-            <div>
-              <h4>Give your contact details:</h4>
-              <FloatingLabel controlId="name" label="Name" className="mb-3">
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="Enter Your Name ... "
-                  value={clientInfo?.name}
-                  onChange={(e) => setClientInfo(e.target.value)}
-                />
-              </FloatingLabel>
-              <FloatingLabel controlId="email" label="Email" className="mb-3">
-                <Form.Control
-                  required
-                  type="email"
-                  placeholder="Enter Your Name ... "
-                  value={clientInfo?.email}
-                  onChange={(e) => setClientInfo(e.target.value)}
-                />
-              </FloatingLabel>
-              <FloatingLabel controlId="phone" label="Phone" className="mb-3">
-                <Form.Control
-                  required
-                  type="email"
-                  placeholder="Enter Your Name ... "
-                  value={clientInfo?.phone}
-                  onChange={(e) => setClientInfo(e.target.value)}
-                />
-              </FloatingLabel>
-            </div>
+          <Modal show={show} onHide={handleClose} size="xl" centered>
+              <Modal.Body>
+                  <form>
+                      <div>
+                          <h4>Give your contact details:</h4>
+                          <FloatingLabel controlId="name" label="Name" className="mb-3">
+                              <Form.Control
+                                  required
+                                  type="text"
+                                  placeholder="Enter Your Name ... "
+                                  value={clientInfo?.name}
+                                  onChange={(e) => setClientInfo((prevValue) => ({ ...prevValue, name: e.target.value }))}
+                              />
+                          </FloatingLabel>
+                          <FloatingLabel controlId="email" label="Email" className="mb-3">
+                              <Form.Control
+                                  required
+                                  type="email"
+                                  placeholder="Enter Your Name ... "
+                                  value={clientInfo?.email}
+                                  onChange={(e) => setClientInfo((prevValue) => ({ ...prevValue, email: e.target.value }))}
+                              />
+                          </FloatingLabel>
+                          <FloatingLabel controlId="phone" label="Phone" className="mb-3">
+                              <Form.Control
+                                  required
+                                  type="email"
+                                  placeholder="Enter Your Name ... "
+                                  value={clientInfo?.phone}
+                                  onChange={(e) => setClientInfo((prevValue) => ({ ...prevValue, phone: e.target.value }))}
+                              />
+                          </FloatingLabel>
+                      </div>
 
                       <span className="rItem">Select your rooms:</span>
 
-            {roomData.map((item) => (
-              <div className="rItem" key={item._id}>
-                <div className="rItemInfo">
-                  <div className="rTitle">{item.title}</div>
-                  <div className="rDesc">{item.desc}</div>
-                  <div className="rMax">
-                    Max people: <b>{item.maxPeople}</b>
-                  </div>
-                  <div className="rPrice">{item.price}</div>
-                </div>
-                <div className="rSelectRooms">
-                  {item.roomNumbers.map((roomNumber) => (
-                    <>
-                      {roomNumber?.number && <div className="room">
-                        <label>{roomNumber.number}</label>
-                        <input
-                          type="checkbox"
-                          value={roomNumber._id}
-                          onChange={handleSelect}
-                          disabled={!isAvailable(roomNumber)}
-                        />
-                      </div>}
-                    </>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClick}>
-            Reserve Now
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+                      {roomData.map((item) => (
+                          <div className="rItem" key={item._id}>
+                              <div className="rItemInfo">
+                                  <div className="rTitle">{item.title}</div>
+                                  <div className="rDesc">{item.desc}</div>
+                                  <div className="rMax">
+                                      Max people: <b>{item.maxPeople}</b>
+                                  </div>
+                                  <div className="rPrice">{item.price}</div>
+                              </div>
+                              <div className="rSelectRooms">
+                                  {item.roomNumbers.map((roomNumber) => (
+                                      <>
+                                          {roomNumber?.number && (
+                                              <div className="room">
+                                                  <label>{roomNumber.number}</label>
+                                                  <input type="checkbox" value={roomNumber._id} onChange={handleSelect} disabled={!isAvailable(roomNumber)} />
+                                              </div>
+                                          )}
+                                      </>
+                                  ))}
+                              </div>
+                          </div>
+                      ))}
+                  </form>
+              </Modal.Body>
+              <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                      Close
+                  </Button>
+                  <Button variant="primary" onClick={handleClick}>
+                      Reserve Now
+                  </Button>
+              </Modal.Footer>
+          </Modal>
+      </>
   );
 };
 
